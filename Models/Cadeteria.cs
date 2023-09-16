@@ -1,9 +1,9 @@
 namespace tl2_tp4_2023_Ragahe10;
 using System.Linq;
 public enum Estado {
-    SinEntregar,
-    Cancelado,
-    Entregado
+    SinEntregar =1,
+    Cancelado=2,
+    Entregado=3
 }
 
 public class Cadeteria {
@@ -34,8 +34,9 @@ public class Cadeteria {
     }
     public Pedido TomarPedido(string nombre, string direccion, int telefono, string datosRef,  string observacion) {
         var cliente = new Cliente(nombre, direccion, telefono,datosRef);
-        var pedido = new Pedido(NumPed,observacion,cliente);
+        var pedido = new Pedido(Pedidos.Count(),observacion,cliente);
         NumPed++;
+        Pedidos.Add(pedido);
         return pedido;
     }
     public void AsignarPedido(int id, Pedido ped){
@@ -75,15 +76,15 @@ public class Cadete {
     private int id;
     private string nombre;
     private string direccion;
-    private int telefono;
+    private long telefono;
 
     // PROPIEDADES
     public int Id { get => id; set => id = value; }
     public string Nombre { get => nombre; set => nombre = value; }
     public string Direccion { get => direccion; set => direccion = value; }
-    public int Telefono { get => telefono; set => telefono = value; }
+    public long Telefono { get => telefono; set => telefono = value; }
 
-    public Cadete(int id, string nombre, string direccion, int telefono)
+    public Cadete(int id, string nombre, string direccion, long telefono)
     {
         Id = id;
         Nombre = nombre;
@@ -167,15 +168,13 @@ public class Informe{
     private float montoTotal;
     public Informe(List<Cadete> lc, List<Pedido> lp){
         cadetesInformes = new List<CadeteInforme>();
-        int total = 0;
         float monto = 0;
         foreach (var c in lc)
         {
             cadetesInformes.Add(new CadeteInforme(c, lp));
-            total += c.CantidadPedidos(lp,0);
             monto += c.JornalACobrar(lp);
         }
-        pedPromedioCad = total / cadetesInformes.Count();
+        pedPromedioCad = lp.Count()/lc.Count();
         montoTotal = monto;
     }
 

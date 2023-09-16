@@ -11,7 +11,16 @@ public class CadeteriaController : ControllerBase
     public CadeteriaController(ILogger<CadeteriaController> logger){
         _logger = logger;
         cadeteria = new Cadeteria("PedidosYa", 4265192);
-        cadeteria.Cadetes.Add([])
+        cadeteria.Cadetes.Add(new Cadete(1,"Ramiro","BdRS",3814159593));
+        cadeteria.Cadetes.Add(new Cadete(2,"Miguel","SMdT",3814650223));
+        cadeteria.Cadetes.Add(new Cadete(3,"Jose","YB",3816312527));
+        cadeteria.TomarPedido("Juan","SMdT",1234,"casa verde","fragil");
+        cadeteria.TomarPedido("Guille","SMdT",4321,"reja roja","no fragil");
+        cadeteria.TomarPedido("Gaby","SMdT",4567,"edificio rosa","fragil");
+    }
+    [HttpGet]
+    public ActionResult<Cadeteria> GetCadeteria(){
+        return Ok(cadeteria);
     }
     [HttpGet]
     [Route("Pedidos")]
@@ -28,5 +37,43 @@ public class CadeteriaController : ControllerBase
     [Route("Informe")]
     public ActionResult<string> GetInforme(){
         return Ok(cadeteria.GetInforme());
+    }
+    [HttpPost ("AddPedido")]
+    public ActionResult<Pedido> AddPedido(string nombre, string direccion, int telefono, string datosRef,  string observacion){
+        cadeteria.TomarPedido(nombre,direccion,telefono, datosRef, observacion);
+        var ped = cadeteria.Pedidos.FirstOrDefault(p=> p.Numero == cadeteria.Pedidos.Count()-1);
+        if(ped!=null){
+            return Ok(ped);
+        }
+        return StatusCode(500,"no se tomó el pedido");
+    }
+    [HttpPut ("AsignarPedido")]
+    public ActionResult<Pedido> AsignarPedido(int idCadete, int numPedido){
+        var pedido = cadeteria.Pedidos.FirstOrDefault(p=>p.Numero == numPedido);
+        var cadete = cadeteria.Cadetes.FirstOrDefault(c=>c.Id == idCadete);
+        if(pedido != null){
+            if(cadete != null){
+                pedido.IdCadete = idCadete;
+                return Ok(pedido);
+            }
+            return NotFound("Cadete inexistente");
+        }
+        return NotFound("Pedido inexistente");
+    }
+    [HttpPut ("CambiarEstadoPedido")]
+    public ActionResult<Pedido> CambiarEstadoPedido(int numPedido, int estado){
+        var pedido = cadeteria.Pedidos.FirstOrDefault(p=>p.Numero == numPedido);
+        if(pedido != null){
+            if(estado>0 && estado<4){
+                pedido.Estado = (Estado)Enum.Parse(typeof(Estado), estado.ToString());//transforma el numero en el tipo enum
+                return Ok(pedido);
+            }
+            return NotFound("El Estado que desea asignar no está entre los aceptados");
+        }
+        return NotFound("Pedido inexistente");
+    }
+    [HttpPut ("CambiarCadetePedido")]
+    public ActionResult<Pedido> CambiarCadetePedido(int idCadete, int numPedido){
+        return AsignarPedido(idCadete, numPedido);
     }
 }
