@@ -26,7 +26,7 @@ public abstract class AccesoADatos{
                     var pago = Cdtria.JornalACobrar(id);
                     arch.WriteLine(id+"| "+nombre+", PE"+pE+" PSE:"+pSE+" PC:"+pC+" PT:"+TP+", JORNAL: "+pago);
                 }
-                var numeroPed = Cdtria.NumPed-1; 
+                var numeroPed = Cdtria.Pedidos.Count(); 
                 arch.WriteLine("Total de pedidos: "+numeroPed+"  Total a pagar: "+Cdtria.TotalaPagar());
             }
             // Console.WriteLine("Arreglo de cadenas escrito en el archivo correctamente.");

@@ -9,13 +9,38 @@ public enum Estado {
 public class Cadeteria {
     private string nombre;
     private int telefono;
-    private int numPed;
     private List<Cadete> cadetes;
     private List<Pedido> pedidos;
+    private static Cadeteria instance;
+    private Cadeteria()
+    {
+        // Inicializa las propiedades si es necesario.
+        nombre = "Mi Cadetería";
+        telefono = 0;
+        cadetes = new List<Cadete>();
+        pedidos = new List<Pedido>();
+        Cadetes.Add(new Cadete(1,"Ramiro","BdRS",3814159593));
+        Cadetes.Add(new Cadete(2,"Miguel","SMdT",3814650223));
+        Cadetes.Add(new Cadete(3,"Jose","YB",3816312527));
+        TomarPedido("Juan","SMdT",1234,"casa verde","fragil");
+        TomarPedido("Guille","SMdT",4321,"reja roja","no fragil");
+        TomarPedido("Gaby","SMdT",4567,"edificio rosa","fragil");
+    }
+    public static Cadeteria Instance
+    {
+        get
+        {
+            // Crear la instancia Cadeteria si aún no existe.
+            if (instance == null)
+            {
+                instance = new Cadeteria();
+            }
+            return instance;
+        }
+    }
     // PROPIEDADES
     public string Nombre { get => nombre; set => nombre = value; }
     public int Telefono { get => telefono; set => telefono = value; }
-    public int NumPed { get => numPed; set => numPed = value; }
     public List<Cadete> Cadetes { get => cadetes; set => cadetes = value; }
     public List<Pedido> Pedidos { get => pedidos; set => pedidos = value; }
 
@@ -25,7 +50,6 @@ public class Cadeteria {
         Telefono = telefono;
         Cadetes = new List<Cadete>();
         Pedidos = new List<Pedido>();
-        NumPed = 1;
     }
 
     // METODOS
@@ -35,7 +59,6 @@ public class Cadeteria {
     public Pedido TomarPedido(string nombre, string direccion, int telefono, string datosRef,  string observacion) {
         var cliente = new Cliente(nombre, direccion, telefono,datosRef);
         var pedido = new Pedido(Pedidos.Count(),observacion,cliente);
-        NumPed++;
         Pedidos.Add(pedido);
         return pedido;
     }

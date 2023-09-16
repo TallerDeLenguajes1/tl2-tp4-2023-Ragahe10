@@ -10,13 +10,7 @@ public class CadeteriaController : ControllerBase
     private readonly ILogger<CadeteriaController> _logger;
     public CadeteriaController(ILogger<CadeteriaController> logger){
         _logger = logger;
-        cadeteria = new Cadeteria("PedidosYa", 4265192);
-        cadeteria.Cadetes.Add(new Cadete(1,"Ramiro","BdRS",3814159593));
-        cadeteria.Cadetes.Add(new Cadete(2,"Miguel","SMdT",3814650223));
-        cadeteria.Cadetes.Add(new Cadete(3,"Jose","YB",3816312527));
-        cadeteria.TomarPedido("Juan","SMdT",1234,"casa verde","fragil");
-        cadeteria.TomarPedido("Guille","SMdT",4321,"reja roja","no fragil");
-        cadeteria.TomarPedido("Gaby","SMdT",4567,"edificio rosa","fragil");
+        cadeteria = Cadeteria.Instance;
     }
     [HttpGet]
     public ActionResult<Cadeteria> GetCadeteria(){
