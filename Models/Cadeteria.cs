@@ -1,4 +1,4 @@
-namespace EspacioCadeteria;
+namespace tl2_tp4_2023_Ragahe10;
 using System.Linq;
 public enum Estado {
     SinEntregar,
@@ -29,6 +29,9 @@ public class Cadeteria {
     }
 
     // METODOS
+    public Informe GetInforme(){
+        return new Informe(Cadetes,Pedidos);
+    }
     public Pedido TomarPedido(string nombre, string direccion, int telefono, string datosRef,  string observacion) {
         var cliente = new Cliente(nombre, direccion, telefono,datosRef);
         var pedido = new Pedido(NumPed,observacion,cliente);
@@ -36,19 +39,12 @@ public class Cadeteria {
         return pedido;
     }
     public void AsignarPedido(int id, Pedido ped){
-        var cad = Cadetes.FirstOrDefault(c=>c.Id == id);
-        cad.Pedidos.Add(ped.Numero);
+        ped.IdCadete = id;
     }
-    public void MoverPedido(List<Pedido>listP, int numeroPed, int id) {
-        Pedido pedido = null;
-        foreach (var cad in Cadetes)
-        {
-            if(cad.Id != id){
-                pedido = listP.FirstOrDefault(p=> p.Numero==cad.QuitarPedido(numeroPed));
-            }
-        }
+    public void MoverPedido(int numeroPed, int id) {
+        var pedido = Pedidos.FirstOrDefault(p=>p.Numero == numeroPed);
         if(pedido != null){
-            AsignarPedido(id, pedido);
+            pedido.IdCadete = id;
         }
     }
     public float PedPromedioCad(){
@@ -63,12 +59,16 @@ public class Cadeteria {
     public float TotalaPagar(){
         float monto=0;
         foreach (var cad in Cadetes){
-            monto = monto +JornalACobrar(cad.Id);
+            monto = monto +cad.JornalACobrar(Pedidos);
         }
         return monto;
     }
     public float JornalACobrar(int idCadete) {
-        return Pedidos.Count(p => p.IdCadete == idCadete && p.Estado == Estado.Entregado)*500;
+        var cad = Cadetes.FirstOrDefault(c=>c.Id == idCadete);
+        if(cad !=null){
+            return cad.JornalACobrar(Pedidos);
+        }
+        return 0;
     }
 }
 public class Cadete {
@@ -76,14 +76,12 @@ public class Cadete {
     private string nombre;
     private string direccion;
     private int telefono;
-    private List<int> pedidos;
 
     // PROPIEDADES
     public int Id { get => id; set => id = value; }
     public string Nombre { get => nombre; set => nombre = value; }
     public string Direccion { get => direccion; set => direccion = value; }
     public int Telefono { get => telefono; set => telefono = value; }
-    public List<int> Pedidos { get => pedidos; set => pedidos = value; }
 
     public Cadete(int id, string nombre, string direccion, int telefono)
     {
@@ -91,19 +89,6 @@ public class Cadete {
         Nombre = nombre;
         Direccion = direccion;
         Telefono = telefono;
-        Pedidos = new List<int>();
-    }
-    public void TomarPedido(int p) {
-        Pedidos.Add(p);
-    }
-    public int QuitarPedido(int numPed) {
-        foreach (var p in Pedidos){
-            if(p == numPed){
-                Pedidos.Remove(p);
-                return p;
-            }
-        }
-        return -1;
     }
     public int CantidadPedidos(List<Pedido> listaP,int op){
         int cant=0;
@@ -122,6 +107,9 @@ public class Cadete {
                 break;
         }
         return cant;
+    }
+    public float JornalACobrar(List<Pedido> lp) {
+        return lp.Count(p => p.IdCadete == Id && p.Estado == Estado.Entregado)*500;
     }
 }
 
@@ -171,5 +159,51 @@ public class Cliente {
         Direccion = direccion;
         Telefono = telefono;
         DatosRefDireccion = datosRefDireccion;
+    }
+}
+public class Informe{
+    private List<CadeteInforme> cadetesInformes;
+    private int pedPromedioCad;
+    private float montoTotal;
+    public Informe(List<Cadete> lc, List<Pedido> lp){
+        cadetesInformes = new List<CadeteInforme>();
+        int total = 0;
+        float monto = 0;
+        foreach (var c in lc)
+        {
+            cadetesInformes.Add(new CadeteInforme(c, lp));
+            total += c.CantidadPedidos(lp,0);
+            monto += c.JornalACobrar(lp);
+        }
+        pedPromedioCad = total / cadetesInformes.Count();
+        montoTotal = monto;
+    }
+
+    public List<CadeteInforme> CadetesInformes { get => cadetesInformes;}
+    public int PedPromedioCad { get => pedPromedioCad;}
+    public float MontoTotal { get => montoTotal;}
+}
+public class CadeteInforme{
+    private string nombre;
+    private int pedidosEntregados;
+    private int pedidosSinEntregar;
+    private int pedidosCancelados;
+    private float sueldo;
+
+    public CadeteInforme(Cadete cadete, List<Pedido> lp){
+        nombre = cadete.Nombre;
+        pedidosEntregados = cadete.CantidadPedidos(lp,1);
+        pedidosSinEntregar = cadete.CantidadPedidos(lp,2);
+        pedidosCancelados = cadete.CantidadPedidos(lp,3);
+        sueldo = cadete.JornalACobrar(lp);
+    }
+
+    public string Nombre { get => nombre;}
+    public int PedidosEntregados { get => pedidosEntregados;}
+    public int PedidosSinEntregar { get => pedidosSinEntregar;}
+    public int PedidosCancelados { get => pedidosCancelados;}
+    public float Sueldo { get => sueldo;}
+    public int CantidadTotalDePedidos(){
+        return pedidosEntregados + pedidosSinEntregar + pedidosCancelados;
     }
 }
