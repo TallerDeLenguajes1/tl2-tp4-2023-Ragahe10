@@ -12,8 +12,9 @@ public class CadeteriaController : ControllerBase
         _logger = logger;
         cadeteria = Cadeteria.Instance;
     }
+    
     [HttpGet]
-    public ActionResult<Cadeteria> GetCadeteria(){
+    public ActionResult<string> GetCadeteria(){
         return Ok(cadeteria);
     }
     [HttpGet]
@@ -33,7 +34,7 @@ public class CadeteriaController : ControllerBase
         return Ok(cadeteria.GetInforme());
     }
     [HttpPost ("AddPedido")]
-    public ActionResult<Pedido> AddPedido(string nombre, string direccion, int telefono, string datosRef,  string observacion){
+    public ActionResult<Pedido> AddPedido(string nombre, string direccion, long telefono, string datosRef,  string observacion){
         cadeteria.TomarPedido(nombre,direccion,telefono, datosRef, observacion);
         var ped = cadeteria.Pedidos.FirstOrDefault(p=> p.Numero == cadeteria.Pedidos.Count()-1);
         if(ped!=null){
@@ -55,14 +56,23 @@ public class CadeteriaController : ControllerBase
         return NotFound("Pedido inexistente");
     }
     [HttpPut ("CambiarEstadoPedido")]
+
     public ActionResult<Pedido> CambiarEstadoPedido(int numPedido, int estado){
         var pedido = cadeteria.Pedidos.FirstOrDefault(p=>p.Numero == numPedido);
         if(pedido != null){
-            if(estado>0 && estado<4){
-                pedido.Estado = (Estado)Enum.Parse(typeof(Estado), estado.ToString());//transforma el numero en el tipo enum
-                return Ok(pedido);
+            if(pedido.Estado == Estado.SinEntregar){
+                if(estado>0 && estado<4){
+                    pedido.Estado = (Estado)Enum.Parse(typeof(Estado), estado.ToString());//transforma el numero en el tipo enum
+                    return Ok(pedido);
+                }
+                return NotFound("El Estado que desea asignar no está entre los aceptados");
+            }else{
+                if(pedido.Estado == Estado.Entregado){
+                    return NotFound("El pedido ya fué Entregado");
+                }else{
+                    return NotFound("El pedido ya fué Cancelado");
+                }
             }
-            return NotFound("El Estado que desea asignar no está entre los aceptados");
         }
         return NotFound("Pedido inexistente");
     }

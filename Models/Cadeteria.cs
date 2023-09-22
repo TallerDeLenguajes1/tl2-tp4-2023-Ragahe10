@@ -56,8 +56,8 @@ public class Cadeteria {
     public Informe GetInforme(){
         return new Informe(Cadetes,Pedidos);
     }
-    public Pedido TomarPedido(string nombre, string direccion, int telefono, string datosRef,  string observacion) {
-        var cliente = new Cliente(nombre, direccion, telefono,datosRef);
+    public Pedido TomarPedido(string nombre, string direccion, long telefono, string datosRef,  string observacion) {
+        var cliente = new Cliente(nombre, direccion, telefono ,datosRef);
         var pedido = new Pedido(Pedidos.Count(),observacion,cliente);
         Pedidos.Add(pedido);
         return pedido;
@@ -170,15 +170,15 @@ public class Pedido {
 public class Cliente {
     private string nombre;
     private string direccion;
-    private int telefono;
+    private long telefono;
     private string datosRefDireccion;
 
     public string Nombre { get => nombre; set => nombre = value; }
     public string Direccion { get => direccion; set => direccion = value; }
-    public int Telefono { get => telefono; set => telefono = value; }
+    public long Telefono { get => telefono; set => telefono = value; }
     public string DatosRefDireccion { get => datosRefDireccion; set => datosRefDireccion = value; }
     
-    public Cliente (string nombre, string direccion, int telefono, string datosRefDireccion) {
+    public Cliente (string nombre, string direccion, long telefono, string datosRefDireccion) {
         Nombre = nombre;
         Direccion = direccion;
         Telefono = telefono;
@@ -200,7 +200,6 @@ public class Informe{
         pedPromedioCad = lp.Count()/lc.Count();
         montoTotal = monto;
     }
-
     public List<CadeteInforme> CadetesInformes { get => cadetesInformes;}
     public int PedPromedioCad { get => pedPromedioCad;}
     public float MontoTotal { get => montoTotal;}
