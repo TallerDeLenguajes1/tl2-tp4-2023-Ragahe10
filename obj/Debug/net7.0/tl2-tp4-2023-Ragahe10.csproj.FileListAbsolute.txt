@@ -31,3 +31,4 @@ C:\Users\educacion\Desktop\ramiro\PU\2doAño\TallerDeLenguajes\Taller-repo\Talle
 C:\Users\educacion\Desktop\ramiro\PU\2doAño\TallerDeLenguajes\Taller-repo\Taller2\tl2-tp4-2023-Ragahe10\obj\Debug\net7.0\tl2-tp4-2023-Ragahe10.pdb
 C:\Users\educacion\Desktop\ramiro\PU\2doAño\TallerDeLenguajes\Taller-repo\Taller2\tl2-tp4-2023-Ragahe10\obj\Debug\net7.0\tl2-tp4-2023-Ragahe10.genruntimeconfig.cache
 C:\Users\educacion\Desktop\ramiro\PU\2doAño\TallerDeLenguajes\Taller-repo\Taller2\tl2-tp4-2023-Ragahe10\obj\Debug\net7.0\ref\tl2-tp4-2023-Ragahe10.dll
+C:\Users\educacion\Desktop\ramiro\PU\2doAño\TallerDeLenguajes\Taller-repo\Taller2\tl2-tp4-2023-Ragahe10\bin\Debug\net7.0\Cadeteria.json

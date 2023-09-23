@@ -1,5 +1,6 @@
 namespace tl2_tp4_2023_Ragahe10;
 using System.Linq;
+using EspacioArchivos;
 public enum Estado {
     SinEntregar =1,
     Cancelado=2,
@@ -15,16 +16,6 @@ public class Cadeteria {
     private Cadeteria()
     {
         // Inicializa las propiedades si es necesario.
-        nombre = "Mi Cadetería";
-        telefono = 0;
-        cadetes = new List<Cadete>();
-        pedidos = new List<Pedido>();
-        Cadetes.Add(new Cadete(1,"Ramiro","BdRS",3814159593));
-        Cadetes.Add(new Cadete(2,"Miguel","SMdT",3814650223));
-        Cadetes.Add(new Cadete(3,"Jose","YB",3816312527));
-        TomarPedido("Juan","SMdT",1234,"casa verde","fragil");
-        TomarPedido("Guille","SMdT",4321,"reja roja","no fragil");
-        TomarPedido("Gaby","SMdT",4567,"edificio rosa","fragil");
     }
     public static Cadeteria Instance
     {
@@ -33,7 +24,9 @@ public class Cadeteria {
             // Crear la instancia Cadeteria si aún no existe.
             if (instance == null)
             {
-                instance = new Cadeteria();
+                var json = new AccesoJSON();
+                instance = json.LeerCadeteria("Cadeteria");
+                instance.Cadetes = json.LeerCadetes("Cadetes");
             }
             return instance;
         }

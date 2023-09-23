@@ -1,12 +1,13 @@
 using tl2_tp4_2023_Ragahe10;
 using Microsoft.VisualBasic.FileIO;
 using System.Text.Json;
+using System.ComponentModel;
 
 namespace EspacioArchivos;
 public abstract class AccesoADatos{
     public abstract bool Existe(string nombre);
     public abstract Cadeteria LeerCadeteria(string nombre);
-    public abstract void LeerCadetes(string nombre, List<Cadete> Cadts);
+    public abstract List<Cadete> LeerCadetes(string nombre);
     public void GuardarResumen(Cadeteria Cdtria){
         try{
             // Abre el archivo para escritura (si no existe, lo crea; si existe, sobrescribe el contenido)
@@ -59,13 +60,15 @@ public class AccesoJSON : AccesoADatos{
         }
         return cadet;
     }
-    public override void LeerCadetes(string nombre, List<Cadete> Cadts){
+    public override List<Cadete> LeerCadetes(string nombre){
+        var cadetes = new List<Cadete>();
         if (Existe(nombre)){
             string json = File.ReadAllText(nombre+".json");
-            Cadts = JsonSerializer.Deserialize<List<Cadete>>(json);
+            cadetes = JsonSerializer.Deserialize<List<Cadete>>(json);
         } else {
             Console.WriteLine("No existe el json");
         }
+        return cadetes;
     }
     public void GuardarJSON(string nombre, Cadeteria cadeterria) {
         var json = JsonSerializer.Serialize(cadeterria);
@@ -100,7 +103,8 @@ public class AccesoCSV : AccesoADatos{
         }
         return null;
     }
-    public override void LeerCadetes(string nombre, List<Cadete> Cadts){
+    public override List<Cadete> LeerCadetes(string nombre){
+        var Cadts = new List<Cadete>();
         using(TextFieldParser ruta = new TextFieldParser(nombre+".csv")){
             ruta.TextFieldType = FieldType.Delimited;
             ruta.SetDelimiters(",",";");
@@ -118,6 +122,7 @@ public class AccesoCSV : AccesoADatos{
                     System.Console.WriteLine("no tiene el formato adecuado");
                 }
             }
+            return Cadts;
         }
     }
 }
