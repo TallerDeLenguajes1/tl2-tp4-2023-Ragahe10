@@ -1,7 +1,7 @@
 namespace tl2_tp4_2023_Ragahe10;
 using System.Text.Json;
-public class AccesoADatosCPedidos{
-    List<Pedido> Obtener(){
+public static class AccesoADatosCPedidos{
+    public static List<Pedido> Obtener(){
         List<Pedido> pedidos = null;
         if (File.Exists("Pedidos.json")){
             string json = File.ReadAllText("Pedidos.json");
@@ -11,7 +11,7 @@ public class AccesoADatosCPedidos{
         }
         return pedidos;
     }
-    void Guardar(List<Pedido> Pedidos){
+    public static void Guardar(List<Pedido> Pedidos){
         var json = JsonSerializer.Serialize(Pedidos);
         File.WriteAllText("Pedidos.json",json);
     }

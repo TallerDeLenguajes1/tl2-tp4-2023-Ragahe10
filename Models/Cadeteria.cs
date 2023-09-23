@@ -23,9 +23,8 @@ public class Cadeteria {
             // Crear la instancia Cadeteria si aún no existe.
             if (instance == null)
             {
-                var json = new AccesoJSON();
-                instance = json.LeerCadeteria("Cadeteria");
-                instance.Cadetes = json.LeerCadetes("Cadetes");
+                instance = AccesoADatosCadeteria.Obtener();
+                instance.Cadetes = AccesoADatosCadetes.Obtener();
             }
             return instance;
         }
