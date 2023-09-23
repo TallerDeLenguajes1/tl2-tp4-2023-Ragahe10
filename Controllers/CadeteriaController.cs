@@ -58,16 +58,13 @@ public class CadeteriaController : ControllerBase
     }
     [HttpPut ("CambiarEstadoPedido")]
 
-    public ActionResult<Pedido> CambiarEstadoPedido(int numPedido, int estado){
+    public ActionResult<Pedido> CambiarEstadoPedido(int numPedido, Estado estado){
         var pedido = cadeteria.Pedidos.FirstOrDefault(p=>p.Numero == numPedido);
         if(pedido != null){
             if(pedido.Estado == Estado.SinEntregar){
-                if(estado>0 && estado<4){
-                    pedido.Estado = (Estado)Enum.Parse(typeof(Estado), estado.ToString());//transforma el numero en el tipo enum
-                    AccesoADatosPedidos.Guardar(cadeteria.Pedidos);
-                    return Ok(pedido);
-                }
-                return NotFound("El Estado que desea asignar no está entre los aceptados");
+                pedido.Estado = estado;
+                AccesoADatosPedidos.Guardar(cadeteria.Pedidos);
+                return Ok(pedido);
             }else{
                 if(pedido.Estado == Estado.Entregado){
                     return NotFound("El pedido ya fué Entregado");
