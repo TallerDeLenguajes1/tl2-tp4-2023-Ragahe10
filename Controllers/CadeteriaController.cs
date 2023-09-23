@@ -21,7 +21,6 @@ public class CadeteriaController : ControllerBase
     [Route("Pedidos")]
     public ActionResult<string> GetPedidos(){
         return Ok(cadeteria.Pedidos);
-        
     }
     [HttpGet]
     [Route("Cadetes")]
@@ -38,6 +37,7 @@ public class CadeteriaController : ControllerBase
         cadeteria.TomarPedido(nombre,direccion,telefono, datosRef, observacion);
         var ped = cadeteria.Pedidos.FirstOrDefault(p=> p.Numero == cadeteria.Pedidos.Count()-1);
         if(ped!=null){
+            AccesoADatosPedidos.Guardar(cadeteria.Pedidos);
             return Ok(ped);
         }
         return StatusCode(500,"no se tomó el pedido");
@@ -49,6 +49,7 @@ public class CadeteriaController : ControllerBase
         if(pedido != null){
             if(cadete != null){
                 pedido.IdCadete = idCadete;
+                AccesoADatosPedidos.Guardar(cadeteria.Pedidos);
                 return Ok(pedido);
             }
             return NotFound("Cadete inexistente");
@@ -63,6 +64,7 @@ public class CadeteriaController : ControllerBase
             if(pedido.Estado == Estado.SinEntregar){
                 if(estado>0 && estado<4){
                     pedido.Estado = (Estado)Enum.Parse(typeof(Estado), estado.ToString());//transforma el numero en el tipo enum
+                    AccesoADatosPedidos.Guardar(cadeteria.Pedidos);
                     return Ok(pedido);
                 }
                 return NotFound("El Estado que desea asignar no está entre los aceptados");
