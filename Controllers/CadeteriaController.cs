@@ -37,7 +37,7 @@ public class CadeteriaController : ControllerBase
         cadeteria.TomarPedido(nombre,direccion,telefono, datosRef, observacion);
         var ped = cadeteria.Pedidos.FirstOrDefault(p=> p.Numero == cadeteria.Pedidos.Count()-1);
         if(ped!=null){
-            AccesoADatosPedidos.Guardar(cadeteria.Pedidos);
+            cadeteria.AccesoADatosPedidos.Guardar(cadeteria.Pedidos);
             return Ok(ped);
         }
         return StatusCode(500,"no se tomó el pedido");
@@ -49,7 +49,7 @@ public class CadeteriaController : ControllerBase
         if(pedido != null){
             if(cadete != null){
                 pedido.IdCadete = idCadete;
-                AccesoADatosPedidos.Guardar(cadeteria.Pedidos);
+                cadeteria.AccesoADatosPedidos.Guardar(cadeteria.Pedidos);
                 return Ok(pedido);
             }
             return NotFound("Cadete inexistente");
@@ -63,7 +63,7 @@ public class CadeteriaController : ControllerBase
         if(pedido != null){
             if(pedido.Estado == Estado.SinEntregar){
                 pedido.Estado = estado;
-                AccesoADatosPedidos.Guardar(cadeteria.Pedidos);
+                cadeteria.AccesoADatosPedidos.Guardar(cadeteria.Pedidos);
                 return Ok(pedido);
             }else{
                 if(pedido.Estado == Estado.Entregado){

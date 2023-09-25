@@ -12,6 +12,7 @@ public class Cadeteria {
     private List<Cadete> cadetes;
     private List<Pedido> pedidos;
     private static Cadeteria instance;
+    private AccesoADatosPedidos accesoADatosPedidos;
     private Cadeteria()
     {
         // Inicializa las propiedades si es necesario.
@@ -34,6 +35,7 @@ public class Cadeteria {
     public int Telefono { get => telefono; set => telefono = value; }
     public List<Cadete> Cadetes { get => cadetes; set => cadetes = value; }
     public List<Pedido> Pedidos { get => pedidos; set => pedidos = value; }
+    public AccesoADatosPedidos AccesoADatosPedidos { get => accesoADatosPedidos; set => accesoADatosPedidos = value; }
 
     // CONSTRUCTORES
     public Cadeteria(string nombre, int telefono) {
