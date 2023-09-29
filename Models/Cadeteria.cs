@@ -47,8 +47,21 @@ public class Cadeteria {
     public List<Cadete> GetCadetes(){
         return accesoADatosCadetes.Obtener();
     }
+    public Cadete GetCadete(int idCadete){
+        return accesoADatosCadetes.Obtener().FirstOrDefault(c => c.Id == idCadete);
+    }
     public List<Pedido> GetPedidos(){
         return accesoADatosPedidos.Obtener();
+    }
+    public Pedido GetPedido(int numPedido){
+        return accesoADatosPedidos.Obtener().FirstOrDefault(p => p.Numero== numPedido);
+    }
+    public Cadete AgregarCadete(int id, string nombre, string direccion, long telefono){
+        var Cadetes = accesoADatosCadetes.Obtener();
+        var cadete = new Cadete(id,nombre,direccion,telefono);
+        Cadetes.Add(cadete);
+        accesoADatosCadetes.Guardar(Cadetes);
+        return cadete;
     }
     public Pedido TomarPedido(string nombre, string direccion, long telefono, string datosRef,  string observacion) {
         var cliente = new Cliente(nombre, direccion, telefono ,datosRef);

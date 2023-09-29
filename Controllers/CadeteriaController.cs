@@ -23,9 +23,27 @@ public class CadeteriaController : ControllerBase
         return Ok(cadeteria.GetPedidos());
     }
     [HttpGet]
+    [Route("Pedidos")]
+    public ActionResult<string> GetPedido(int numPedido){
+        var pedido = cadeteria.GetPedido(numPedido);
+        if(pedido != null){
+            return Ok(pedido);
+        }
+        return NotFound();
+    }
+    [HttpGet]
     [Route("Cadetes")]
     public ActionResult<string> GetCadetes(){
         return Ok(cadeteria.GetCadetes());
+    }
+    [HttpGet]
+    [Route("Cadetes")]
+    public ActionResult<string> GetCadete(int idCadete){
+        var cadete = cadeteria.GetCadete(idCadete);
+        if(cadete != null){
+            return Ok(cadete);
+        }
+        return NotFound();
     }
     [HttpGet]
     [Route("Informe")]
@@ -39,6 +57,14 @@ public class CadeteriaController : ControllerBase
             return Accepted(ped);
         }
         return StatusCode(500,"no se tomó el pedido");
+    }
+    [HttpPost ("AddCadete")]
+    public ActionResult<Pedido> AddCadete(int id, string nombre, string direccion, long telefono){
+        var cadete = cadeteria.AgregarCadete(id,nombre,direccion,telefono);
+        if(cadete!=null){
+            return Accepted(cadete);
+        }
+        return StatusCode(500,"No se agregó el cadete");
     }
     [HttpPut ("AsignarPedido")]
     public ActionResult<Pedido> AsignarPedido(int idCadete, int numPedido){

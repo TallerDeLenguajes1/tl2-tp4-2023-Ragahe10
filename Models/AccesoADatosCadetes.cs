@@ -11,4 +11,8 @@ public class AccesoADatosCadetes{
         }
         return cadetes;
     }
+    public void Guardar(List<Cadete> Cadetes){
+        var json = JsonSerializer.Serialize(Cadetes);
+        File.WriteAllText("Cadetes.json",json);
+    }
 }
