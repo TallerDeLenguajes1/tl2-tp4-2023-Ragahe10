@@ -1,7 +1,7 @@
 namespace tl2_tp4_2023_Ragahe10;
 using System.Text.Json;
-public static class AccesoADatosCadeteria{
-    public static Cadeteria Obtener(){
+public class AccesoADatosCadeteria{
+    public Cadeteria Obtener(){
         Cadeteria cadet = null;
         if (File.Exists("Cadeteria.json")){
             string json = File.ReadAllText("Cadeteria.json");

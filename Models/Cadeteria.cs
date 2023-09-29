@@ -9,13 +9,19 @@ public enum Estado {
 public class Cadeteria {
     private string nombre;
     private int telefono;
-    private List<Cadete> cadetes;
-    private List<Pedido> pedidos;
     private static Cadeteria instance;
+    private AccesoADatosCadeteria accesoADatosCadeteria;
+    private AccesoADatosCadetes accesoADatosCadetes;
     private AccesoADatosPedidos accesoADatosPedidos;
+    // private AccesoADatosPedidos accesoADatosPedidos;
     private Cadeteria()
     {
-        // Inicializa las propiedades si es necesario.
+        // Inicializa las propiedades si es necesario
+        accesoADatosCadeteria = new AccesoADatosCadeteria();
+        accesoADatosCadetes = new AccesoADatosCadetes();
+        accesoADatosPedidos = new AccesoADatosPedidos();
+        instance = accesoADatosCadeteria.Obtener();
+        
     }
     public static Cadeteria Instance
     {
@@ -24,8 +30,7 @@ public class Cadeteria {
             // Crear la instancia Cadeteria si aún no existe.
             if (instance == null)
             {
-                instance = AccesoADatosCadeteria.Obtener();
-                instance.Cadetes = AccesoADatosCadetes.Obtener();
+                instance = new Cadeteria();
             }
             return instance;
         }
@@ -33,59 +38,69 @@ public class Cadeteria {
     // PROPIEDADES
     public string Nombre { get => nombre; set => nombre = value; }
     public int Telefono { get => telefono; set => telefono = value; }
-    public List<Cadete> Cadetes { get => cadetes; set => cadetes = value; }
-    public List<Pedido> Pedidos { get => pedidos; set => pedidos = value; }
-    public AccesoADatosPedidos AccesoADatosPedidos { get => accesoADatosPedidos; set => accesoADatosPedidos = value; }
-
-    // CONSTRUCTORES
-    public Cadeteria(string nombre, int telefono) {
-        Nombre = nombre;
-        Telefono = telefono;
-        Cadetes = new List<Cadete>();
-        Pedidos = new List<Pedido>();
-    }
+    // public AccesoADatosPedidos AccesoADatosPedidos { get => accesoADatosPedidos; set => accesoADatosPedidos = value; }
 
     // METODOS
     public Informe GetInforme(){
-        return new Informe(Cadetes,Pedidos);
+        return new Informe(accesoADatosCadetes.Obtener(),accesoADatosPedidos.Obtener());
+    }
+    public List<Cadete> GetCadetes(){
+        return accesoADatosCadetes.Obtener();
+    }
+    public List<Pedido> GetPedidos(){
+        return accesoADatosPedidos.Obtener();
     }
     public Pedido TomarPedido(string nombre, string direccion, long telefono, string datosRef,  string observacion) {
         var cliente = new Cliente(nombre, direccion, telefono ,datosRef);
-        var pedido = new Pedido(Pedidos.Count(),observacion,cliente);
+        var pedido = new Pedido(accesoADatosPedidos.Obtener().Count(),observacion,cliente);
+        var Pedidos = accesoADatosPedidos.Obtener();
         Pedidos.Add(pedido);
+        accesoADatosPedidos.Guardar(Pedidos);
         return pedido;
     }
-    public void AsignarPedido(int id, Pedido ped){
-        ped.IdCadete = id;
-    }
-    public void MoverPedido(int numeroPed, int id) {
-        var pedido = Pedidos.FirstOrDefault(p=>p.Numero == numeroPed);
-        if(pedido != null){
-            pedido.IdCadete = id;
+    public Pedido AsignarPedido(int idCadete, int numPedido){
+        var Pedidos = accesoADatosPedidos.Obtener();
+        var Cadetes = accesoADatosCadetes.Obtener();
+        var pedido = Pedidos.FirstOrDefault(p => p.Numero == numPedido);
+        var cadete = Cadetes.FirstOrDefault(c => c.Id == idCadete);
+        if(pedido != null && cadete != null){
+            pedido.IdCadete = idCadete;
         }
+        return pedido;
     }
     public float PedPromedioCad(){
-        // int pedidos = 0;
-        // foreach (var c in Cadetes)
-        // {
-        //     pedidos += c.CantidadPedidos(Pedidos,0); 
-        // }
-        // return pedidos/Cadetes.Count();
+        var Pedidos = accesoADatosPedidos.Obtener();
+        var Cadetes = accesoADatosCadetes.Obtener();
         return Pedidos.Count()/Cadetes.Count();
     }
     public float TotalaPagar(){
         float monto=0;
+        var Pedidos = accesoADatosPedidos.Obtener();
+        var Cadetes = accesoADatosCadetes.Obtener();
         foreach (var cad in Cadetes){
             monto = monto +cad.JornalACobrar(Pedidos);
         }
         return monto;
     }
     public float JornalACobrar(int idCadete) {
+        var Pedidos = accesoADatosPedidos.Obtener();
+        var Cadetes = accesoADatosCadetes.Obtener();
         var cad = Cadetes.FirstOrDefault(c=>c.Id == idCadete);
         if(cad !=null){
             return cad.JornalACobrar(Pedidos);
         }
         return 0;
+    }
+    public Pedido CambiarEstadoPedido(int numPedido, Estado estado){
+        var Pedidos = accesoADatosPedidos.Obtener();
+        var pedido = Pedidos.FirstOrDefault(p => p.Numero == numPedido);
+        if(pedido != null){
+            if(pedido.CambiarEstadoPedido(estado)){
+                accesoADatosPedidos.Guardar(Pedidos);
+                return pedido;
+            }
+        }
+        return null;
     }
 }
 public class Cadete {
@@ -151,12 +166,12 @@ public class Pedido {
         Client = cliente;
         IdCadete = 0;
     }
-
-    public void EntregarPedido() {
-        Estado = Estado.Entregado;
-    }
-    public void CancelarPedido() {
-        Estado = Estado.Cancelado;
+    public bool CambiarEstadoPedido(Estado estadoNuevo){
+        if(estado != Estado.Cancelado && estado != Estado.Entregado){
+            estado = estadoNuevo;
+            return true;
+        }
+        return false;
     }
 }
 

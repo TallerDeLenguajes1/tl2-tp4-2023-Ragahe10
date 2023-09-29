@@ -20,12 +20,12 @@ public class CadeteriaController : ControllerBase
     [HttpGet]
     [Route("Pedidos")]
     public ActionResult<string> GetPedidos(){
-        return Ok(cadeteria.Pedidos);
+        return Ok(cadeteria.GetPedidos());
     }
     [HttpGet]
     [Route("Cadetes")]
     public ActionResult<string> GetCadetes(){
-        return Ok(cadeteria.Cadetes);
+        return Ok(cadeteria.GetCadetes());
     }
     [HttpGet]
     [Route("Informe")]
@@ -34,44 +34,26 @@ public class CadeteriaController : ControllerBase
     }
     [HttpPost ("AddPedido")]
     public ActionResult<Pedido> AddPedido(string nombre, string direccion, long telefono, string datosRef,  string observacion){
-        cadeteria.TomarPedido(nombre,direccion,telefono, datosRef, observacion);
-        var ped = cadeteria.Pedidos.FirstOrDefault(p=> p.Numero == cadeteria.Pedidos.Count()-1);
+        var ped = cadeteria.TomarPedido(nombre,direccion,telefono, datosRef, observacion);
         if(ped!=null){
-            cadeteria.AccesoADatosPedidos.Guardar(cadeteria.Pedidos);
-            return Ok(ped);
+            return Accepted(ped);
         }
         return StatusCode(500,"no se tomó el pedido");
     }
     [HttpPut ("AsignarPedido")]
     public ActionResult<Pedido> AsignarPedido(int idCadete, int numPedido){
-        var pedido = cadeteria.Pedidos.FirstOrDefault(p=>p.Numero == numPedido);
-        var cadete = cadeteria.Cadetes.FirstOrDefault(c=>c.Id == idCadete);
+        var pedido = cadeteria.AsignarPedido(idCadete,numPedido);
         if(pedido != null){
-            if(cadete != null){
-                pedido.IdCadete = idCadete;
-                cadeteria.AccesoADatosPedidos.Guardar(cadeteria.Pedidos);
-                return Ok(pedido);
-            }
-            return NotFound("Cadete inexistente");
+            return Accepted(pedido);
         }
-        return NotFound("Pedido inexistente");
+        return NotFound("Error del Servidor");
     }
     [HttpPut ("CambiarEstadoPedido")]
 
     public ActionResult<Pedido> CambiarEstadoPedido(int numPedido, Estado estado){
-        var pedido = cadeteria.Pedidos.FirstOrDefault(p=>p.Numero == numPedido);
+        var pedido = cadeteria.CambiarEstadoPedido(numPedido,estado);
         if(pedido != null){
-            if(pedido.Estado == Estado.SinEntregar){
-                pedido.Estado = estado;
-                cadeteria.AccesoADatosPedidos.Guardar(cadeteria.Pedidos);
-                return Ok(pedido);
-            }else{
-                if(pedido.Estado == Estado.Entregado){
-                    return NotFound("El pedido ya fué Entregado");
-                }else{
-                    return NotFound("El pedido ya fué Cancelado");
-                }
-            }
+            return Accepted(pedido);
         }
         return NotFound("Pedido inexistente");
     }
