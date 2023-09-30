@@ -10,7 +10,7 @@ public class CadeteriaController : ControllerBase
     private readonly ILogger<CadeteriaController> _logger;
     public CadeteriaController(ILogger<CadeteriaController> logger){
         _logger = logger;
-        cadeteria = Cadeteria.Instance;
+        cadeteria = Cadeteria.GetInstance();
     }
     
     [HttpGet]
@@ -23,7 +23,7 @@ public class CadeteriaController : ControllerBase
         return Ok(cadeteria.GetPedidos());
     }
     [HttpGet]
-    [Route("Pedidos")]
+    [Route("Pedidos/{numPedido}")]
     public ActionResult<string> GetPedido(int numPedido){
         var pedido = cadeteria.GetPedido(numPedido);
         if(pedido != null){
@@ -37,7 +37,7 @@ public class CadeteriaController : ControllerBase
         return Ok(cadeteria.GetCadetes());
     }
     [HttpGet]
-    [Route("Cadetes")]
+    [Route("Cadetes/{idCadete}")]
     public ActionResult<string> GetCadete(int idCadete){
         var cadete = cadeteria.GetCadete(idCadete);
         if(cadete != null){
@@ -53,14 +53,14 @@ public class CadeteriaController : ControllerBase
     [HttpPost ("AddPedido")]
     public ActionResult<Pedido> AddPedido(string nombre, string direccion, long telefono, string datosRef,  string observacion){
         var ped = cadeteria.TomarPedido(nombre,direccion,telefono, datosRef, observacion);
-        if(ped!=null){
+        if(ped != null){
             return Accepted(ped);
         }
         return StatusCode(500,"no se tomó el pedido");
     }
     [HttpPost ("AddCadete")]
-    public ActionResult<Pedido> AddCadete(int id, string nombre, string direccion, long telefono){
-        var cadete = cadeteria.AgregarCadete(id,nombre,direccion,telefono);
+    public ActionResult<Pedido> AddCadete(string nombre, string direccion, long telefono){
+        var cadete = cadeteria.AgregarCadete(nombre,direccion,telefono);
         if(cadete!=null){
             return Accepted(cadete);
         }

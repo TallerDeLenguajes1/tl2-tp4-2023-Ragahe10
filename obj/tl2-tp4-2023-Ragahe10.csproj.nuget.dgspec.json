@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\educacion\\Desktop\\ramiro\\PU\\2doAño\\TallerDeLenguajes\\Taller-repo\\Taller2\\tl2-tp4-2023-Ragahe10\\tl2-tp4-2023-Ragahe10.csproj": {}
+    "C:\\Users\\educacion\\Desktop\\ramiro\\PU\\2doAño\\TallerDeLenguajes\\Taller-repo\\Taller2\\tl2-tp4-2023-Ragahe10\\tl2-tp4-2023-Ragahe10.csproj": {}
   },
   "projects": {
-    "c:\\Users\\educacion\\Desktop\\ramiro\\PU\\2doAño\\TallerDeLenguajes\\Taller-repo\\Taller2\\tl2-tp4-2023-Ragahe10\\tl2-tp4-2023-Ragahe10.csproj": {
+    "C:\\Users\\educacion\\Desktop\\ramiro\\PU\\2doAño\\TallerDeLenguajes\\Taller-repo\\Taller2\\tl2-tp4-2023-Ragahe10\\tl2-tp4-2023-Ragahe10.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\educacion\\Desktop\\ramiro\\PU\\2doAño\\TallerDeLenguajes\\Taller-repo\\Taller2\\tl2-tp4-2023-Ragahe10\\tl2-tp4-2023-Ragahe10.csproj",
+        "projectUniqueName": "C:\\Users\\educacion\\Desktop\\ramiro\\PU\\2doAño\\TallerDeLenguajes\\Taller-repo\\Taller2\\tl2-tp4-2023-Ragahe10\\tl2-tp4-2023-Ragahe10.csproj",
         "projectName": "tl2-tp4-2023-Ragahe10",
-        "projectPath": "c:\\Users\\educacion\\Desktop\\ramiro\\PU\\2doAño\\TallerDeLenguajes\\Taller-repo\\Taller2\\tl2-tp4-2023-Ragahe10\\tl2-tp4-2023-Ragahe10.csproj",
+        "projectPath": "C:\\Users\\educacion\\Desktop\\ramiro\\PU\\2doAño\\TallerDeLenguajes\\Taller-repo\\Taller2\\tl2-tp4-2023-Ragahe10\\tl2-tp4-2023-Ragahe10.csproj",
         "packagesPath": "C:\\Users\\educacion\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\educacion\\Desktop\\ramiro\\PU\\2doAño\\TallerDeLenguajes\\Taller-repo\\Taller2\\tl2-tp4-2023-Ragahe10\\obj\\",
+        "outputPath": "C:\\Users\\educacion\\Desktop\\ramiro\\PU\\2doAño\\TallerDeLenguajes\\Taller-repo\\Taller2\\tl2-tp4-2023-Ragahe10\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\educacion\\AppData\\Roaming\\NuGet\\NuGet.Config"
